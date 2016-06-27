@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Licensed to the Apache Software Foundation (ASF) under one or more
 contributor license agreements.  See the NOTICE file distributed with
@@ -20,11 +20,11 @@ limitations under the License.
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>38</version>
+    <version>40</version>
   </parent>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-csv</artifactId>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.5-SNAPSHOT</version>
   <name>Apache Commons CSV</name>
   <url>http://commons.apache.org/proper/commons-csv/</url>
   <description>
@@ -42,7 +42,13 @@ CSV files of various types.
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.4</version>
+      <version>2.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -118,21 +124,21 @@ CSV files of various types.
   </distributionManagement>
 
   <properties>
-    <commons.release.version>1.3</commons.release.version>
+    <commons.release.version>1.5</commons.release.version>
     <commons.release.desc>(Java 6.0+)</commons.release.desc>
     <!-- The RC version used in the staging repository URL. -->
     <commons.rc.version>RC1</commons.rc.version>
     <commons.componentid>csv</commons.componentid>
     <commons.jira.id>CSV</commons.jira.id>
     <commons.jira.pid>12313222</commons.jira.pid>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
     <!-- Ensure copies work OK (can be removed later when this is in parent POM) -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <commons.encoding>UTF-8</commons.encoding>
 
-    <checkstyle.version>2.16</checkstyle.version>
+    <checkstyle.version>2.17</checkstyle.version>
     <checkstyle.header.file>${basedir}/LICENSE-header.txt</checkstyle.header.file>
     <checkstyle.resourceExcludes>LICENSE.txt, NOTICE.txt</checkstyle.resourceExcludes>
   </properties>
@@ -200,6 +206,8 @@ CSV files of various types.
         <!-- Should agree with config in reporting section -->
         <configuration>
           <excludes>
+            <!-- These files are used as test data and test result specifications. -->
+            <exclude>src/test/resources/csv-167/sample1.csv</exclude>
             <exclude>src/test/resources/CSVFileParser/bom.csv</exclude>
             <exclude>src/test/resources/CSVFileParser/test.csv</exclude>
             <exclude>src/test/resources/CSVFileParser/test_default.txt</exclude>
@@ -209,6 +217,7 @@ CSV files of various types.
             <exclude>src/test/resources/CSVFileParser/testCSV85.csv</exclude>
             <exclude>src/test/resources/CSVFileParser/testCSV85_default.txt</exclude>
             <exclude>src/test/resources/CSVFileParser/testCSV85_ignoreEmpty.txt</exclude>
+            <!-- The ferc.gov files are included discussion in https://issues.apache.org/jira/browse/LEGAL-175. -->
             <exclude>src/test/resources/ferc.gov/contract.txt</exclude>
             <exclude>src/test/resources/ferc.gov/transaction.txt</exclude>
           </excludes>
@@ -240,7 +249,7 @@ CSV files of various types.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.5</version>
+        <version>3.6</version>
         <configuration>
           <targetJdk>${maven.compiler.target}</targetJdk>
         </configuration>
@@ -248,7 +257,7 @@ CSV files of various types.
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.2</version>
+        <version>3.0.3</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -302,7 +311,7 @@ CSV files of various types.
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>javancss-maven-plugin</artifactId>
-        <version>2.0</version>
+        <version>2.1</version>
       </plugin>
 
       <!-- We need to add our test data files to rat exclusions -->
@@ -313,6 +322,7 @@ CSV files of various types.
         <!-- Should agree with config in build section -->
         <configuration>
           <excludes>
+            <exclude>src/test/resources/csv-167/sample1.csv</exclude>
             <exclude>src/test/resources/CSVFileParser/bom.csv</exclude>
             <exclude>src/test/resources/CSVFileParser/test.csv</exclude>
             <exclude>src/test/resources/CSVFileParser/test_default.txt</exclude>
@@ -354,18 +364,18 @@ CSV files of various types.
                 <configuration>
                   <tasks>
                     <exec executable="svn">
-                      <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}" />
+                      <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}"/>
                     </exec>
 
                     <exec executable="svn">
-                      <arg line="update --set-depth exclude ${commons.scmPubCheckoutDirectory}/javadocs" />
+                      <arg line="update --set-depth exclude ${commons.scmPubCheckoutDirectory}/javadocs"/>
                     </exec>
 
                     <pathconvert pathsep=" " property="dirs">
-                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="*" />
+                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="*"/>
                     </pathconvert>
                     <exec executable="svn">
-                      <arg line="update --set-depth infinity ${dirs}" />
+                      <arg line="update --set-depth infinity ${dirs}"/>
                     </exec>
                   </tasks>
                 </configuration>
